@@ -29,9 +29,6 @@ export class HomeComponent implements OnInit {
       colorVariation: 50
     };
 
-    let background = new Image();
-    background.src = "../../assets/images/my.gif";
-
 
 // Colors
     let colorPalette = {
