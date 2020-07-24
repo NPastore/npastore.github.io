@@ -1,0 +1,29 @@
+@import url(https://fonts.googleapis.com/css?family=Oswald);
+.container{
+  background: url("/assets/images/my.gif");
+  background-size: cover;
+  height: 100vh;
+  padding:0;
+  margin:0;
+}
+
+#canvas {
+  position: absolute;
+  width: 100%;
+  height: calc(100vh) !important;
+  z-index: 5;
+}
+
+.style-3 {
+  color: #fff;
+  position: absolute;
+  font-family: "Oswald", sans-serif;
+  z-index: 21654511414;
+  text-align: center;
+  width: 100%;
+}
+
+.subtitle{
+  top: 50px;
+}
+
