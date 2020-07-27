@@ -1,16 +1,66 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import {trigger, state, animate, style, transition} from '@angular/animations';
+import { interval, Subscription } from 'rxjs';
+
+const COLORS: string[] = [
+  'yellow',
+  'black',
+  'white',
+  'blue',
+  'green',
+  'pink',
+  'purple',
+  'orange'
+]
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
+  animations: [
+    trigger('fade', [ 
+      state('void', style({
+        opacity: 0
+      })),
+  
+      state('*', style({
+        opacity: 1
+      })),
+  
+      transition('void <=> *', animate('500ms'))
+    ])
+  ]
 })
 export class HomeComponent implements OnInit {
   @ViewChild('canvas', {static: true}) canvasCtrl;
+  public load: boolean = false;
+  public load2: boolean = false;
+  private subscription: Subscription;
+  private source = interval(5000);
   constructor() { }
 
   ngOnInit(): void {
+    this.load = false;
+    this.load2 = false;
     this.canvasAnimationStart(this.canvasCtrl.nativeElement);
+    setTimeout(() => {
+      this.load = true;
+      this.load2 = false;
+      this.changeColor();
+    }, 3000);
+    this.subscription = this.source.subscribe(val => this.changeColor());
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
+  changeColor(){
+    this.load2 = false;
+    setTimeout(() => {
+      document.documentElement.style.setProperty('--color', COLORS[Math.floor(Math.random() * 8)]);
+      this.load2 = true;
+    }, 500);
   }
 
   private canvasAnimationStart(canvasCtrl: any) {
@@ -175,29 +225,46 @@ export class HomeComponent implements OnInit {
         id = 'boom'+Math.floor(Math.random() * 7);
       }
       var _div = document.getElementById(id);     // returns a random integer from 0 to 9 );
-      _div.style.left = x+'px';
+      _div.style.left = canvasCtrl.width+x- canvasCtrl.width+'px';
+      if(canvasCtrl.width<1000){
+        _div.style.left = canvasCtrl.width+x+20- canvasCtrl.width+'px';
+      }
       switch(_div.id) {
         case "boom0":
-          _div.style.top = y+'px';
-          console.log("boom0")
+          _div.style.top = canvasCtrl.height+y -canvasCtrl.height+'px';
           break;
         case "boom1":
-          _div.style.top = y-120+'px';
+          _div.style.top = canvasCtrl.height+y-document.getElementById("boom0").offsetHeight-canvasCtrl.height+'px';
           break;
         case "boom2":
-          _div.style.top = y-160+'px';
+          _div.style.top = canvasCtrl.height+y-document.getElementById("boom0").offsetHeight-
+          document.getElementById("boom1").offsetHeight-canvasCtrl.height+'px';
           break;
         case "boom3":
-          _div.style.top = y-260+'px';
+          _div.style.top =canvasCtrl.height+y-document.getElementById("boom0").offsetHeight-
+          document.getElementById("boom1").offsetHeight-
+          document.getElementById("boom2").offsetHeight-canvasCtrl.height+'px'; 
           break;
         case "boom4":
-          _div.style.top = y-300+'px';
+          _div.style.top = canvasCtrl.height+y-document.getElementById("boom0").offsetHeight-
+          document.getElementById("boom1").offsetHeight-
+          document.getElementById("boom2").offsetHeight-
+          document.getElementById("boom3").offsetHeight-canvasCtrl.height+'px';
           break;
         case "boom5":
-          _div.style.top = y-400+'px';
+          _div.style.top = canvasCtrl.height+y-document.getElementById("boom0").offsetHeight-
+          document.getElementById("boom1").offsetHeight-
+          document.getElementById("boom2").offsetHeight-
+          document.getElementById("boom3").offsetHeight-
+          document.getElementById("boom4").offsetHeight-canvasCtrl.height+'px';
           break;
         case "boom6":
-          _div.style.top = y-460+'px';
+          _div.style.top = canvasCtrl.height+y-document.getElementById("boom0").offsetHeight-
+          document.getElementById("boom1").offsetHeight-
+          document.getElementById("boom2").offsetHeight-
+          document.getElementById("boom3").offsetHeight-
+          document.getElementById("boom4").offsetHeight-
+          document.getElementById("boom5").offsetHeight-canvasCtrl.height+'px';
           break;
       }
       _div.style.visibility = 'visible';
@@ -226,5 +293,6 @@ export class HomeComponent implements OnInit {
 
 // First particle explosion
     //initParticles(config.particleNumber);
+
   }
 }
